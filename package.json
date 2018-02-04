@@ -1,0 +1,23 @@
+{
+  "name": "react-text-scrambler",
+  "version": "1.0.0",
+  "description": "React components for simple text animations",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benjhu/react-text-scrambler.git"
+  },
+  "author": "Benjamin Huang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benjhu/react-text-scrambler/issues"
+  },
+  "homepage": "https://github.com/benjhu/react-text-scrambler#readme",
+  "devDependencies": {
+    "eslint": "^4.17.0",
+    "eslint-config-google": "^0.9.1"
+  }
+}
