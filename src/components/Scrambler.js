@@ -1,6 +1,6 @@
 import React from "react";
 
-class Scramble extends React.Component {
+class Scrambler extends React.Component {
     constructor(props) {
         super(props);
 
@@ -117,3 +117,5 @@ class Scramble extends React.Component {
         return this.state.display;
     }
 }
+
+export default Scrambler;

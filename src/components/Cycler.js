@@ -78,3 +78,5 @@ class Cycler extends React.Component {
         );
     }
 }
+
+export default Cycler;
