@@ -1,4 +1,5 @@
 import React from "react";
+import Scrambler from "./Scrambler";
 
 class Cycler extends React.Component {
     constructor(props) {
@@ -9,16 +10,16 @@ class Cycler extends React.Component {
 
         this.state = {
             cycling: true,
-            renderText: ""
+            renderText: "",
+            previous: ""
         };
     }
 
-    changeRenderText(text) {
-        this.setState({ renderText: text });
+    changeRenderText(text, previous) {
+        this.setState({ renderText: text, previousText: previous });
     }
 
     cycle(time = 3000) {
-        this.history = [];
         const { humanLike, strings, callback } = this.props;
         let cycleThis = strings;
 
@@ -26,24 +27,22 @@ class Cycler extends React.Component {
             cycleThis = this.insertChar(strings);
         }
 
-        const iterate = (iteration = 0) => {
+        const iterate = (iteration = 0, previous) => {
             if (typeof callback === "function") {
                 callback(cycleThis[iteration], iteration);
             }
 
             return setTimeout(() => {
-                this.updateHistory(cycleThis[iteration]);
-                this.changeRenderText(cycleThis[iteration]);
+                this.changeRenderText(cycleThis[iteration], previous);
 
                 if (this.state.cycling) {
-                    iterate((iteration + 1) % cycleThis.length);
+                    iterate((iteration + 1) % cycleThis.length, cycleThis[iteration]);
                 }
             }, time);
         };
 
-        this.updateHistory(cycleThis[0]);
         this.changeRenderText(cycleThis[0]);
-        this.timeout = iterate(1);
+        this.timeout = iterate(1, cycleThis[0]);
     }
 
     stop() {
@@ -52,15 +51,7 @@ class Cycler extends React.Component {
     }
 
     insertChar(array, char = "") {
-        return array.reduce((accumulator, currentValue) => [...accumulator, currentValue, ""], []);
-    }
-
-    updateHistory(text) {
-        if (!this.history) {
-            this.history = [];
-        }
-
-        this.history.push(text);
+        return array.reduce((accumulator, currentValue) => [...accumulator, currentValue, char], []);
     }
 
     componentDidMount() {
@@ -68,13 +59,11 @@ class Cycler extends React.Component {
     }
 
     render() {
-        const lastScrambled = this.history ? this.history.pop() : "";
-
         return (
-            <Scramble
-                changeFrom={ lastScrambled }
+            <Scrambler
+                changeFrom={ this.state.previousText }
                 humanLike={ this.props.humanLike }
-                renderIn={ this.props.duration }>{ this.state.renderText }</Scramble>
+                renderIn={ this.props.duration }>{ this.state.renderText }</Scrambler>
         );
     }
 }
