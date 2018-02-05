@@ -11,20 +11,20 @@ class Scrambler extends React.Component {
         };
     }
 
-    startScrambling(renderIn) {
+    startScrambling(renderIn, end, start) {
         this.queue = [];
 
         // This would be provided by a parent component "Cycler"
-        const lastScrambled = this.props.changeFrom || "";
-        const longer = lastScrambled.length > this.scramble.length ? lastScrambled.length : this.scramble.length;
-        const maxFrames = (60 * (renderIn / 1000)) - 10;
+        const lastScrambled = start || "";
+        const longer = lastScrambled.length > end.length ? lastScrambled.length : end.length;
+        const maxFrames = 60 * (renderIn / 1000);
 
         for (let i = 0, lastStartFrame = 0, dec = maxFrames; i < longer; i++) {
             const frames = maxFrames / longer;
-            const humanLikeTime = lastScrambled.length < this.scramble.length ? lastStartFrame + Math.floor(Math.random() * frames * 0.9) : dec - Math.floor(Math.random() * frames * 0.9);
+            const humanLikeTime = lastScrambled.length < end.length ? lastStartFrame + Math.floor(Math.random() * frames * 0.9) : dec - Math.floor(Math.random() * frames * 0.9);
 
             const oldCharacter = lastScrambled[i] || "";
-            const newCharacter = this.scramble[i] || "";
+            const newCharacter = end[i] || "";
             const startTransformation = this.props.humanLike ? humanLikeTime : Math.floor(Math.random() * 60);
             const endTransformation = Math.floor(Math.random() * 90) + startTransformation;
 
@@ -95,22 +95,20 @@ class Scrambler extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.scramble = nextProps.children;
-
         // If new text is passed (possibly from a setState in the parent component), restart scrambling.
         this.frame = 0;
-        this.startScrambling(nextProps.renderIn);
+        this.startScrambling(nextProps.renderIn, nextProps.children, nextProps.changeFrom);
     }
 
     componentDidMount() {
         const { renderIn, characters, children } = this.props;
 
-        this.scramble = typeof children === "string" ? children :
+        const scramble = typeof children === "string" ? children :
             "Component Scramble only takes a single string as a child!";
         this.characters = characters || "+/\\_-";
 
         this.frame = 0;
-        this.startScrambling(renderIn);
+        this.startScrambling(renderIn, scramble, "");
     }
 
     render() {
