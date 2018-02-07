@@ -6,7 +6,6 @@ class Cycler extends React.Component {
         super(props);
 
         this.cycle = this.cycle.bind(this);
-        this.updateHistory = this.updateHistory.bind(this);
 
         this.state = {
             cycling: true,
