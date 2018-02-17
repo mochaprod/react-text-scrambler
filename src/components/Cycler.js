@@ -10,7 +10,7 @@ class Cycler extends React.Component {
         this.state = {
             cycling: true,
             renderText: "",
-            previous: ""
+            previousText: ""
         };
     }
 
@@ -53,7 +53,25 @@ class Cycler extends React.Component {
         return array.reduce((accumulator, currentValue) => [...accumulator, currentValue, char], []);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        const filter = nextProps.strings.filter(str =>
+            !this.props.strings.includes(str));
+
+        // Update if the scrambled text changes.
+        if (nextState.renderText !== this.state.renderText) {
+            return true;
+        }
+
+        // If there are no new strings, then don't update
+        if (filter.length === 0) {
+            return false;
+        }
+
+        return true;
+    }
+
     componentDidMount() {
+        console.log("Mounted.");
         this.cycle(this.props.duration);
     }
 
