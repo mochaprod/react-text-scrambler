@@ -12,7 +12,7 @@ class Scrambler extends React.Component {
         };
     }
 
-    startScrambling(renderIn, end, start) {
+    startScrambling(end, start, renderIn = 3000) {
         this.queue = [];
 
         // This would be provided by a parent component "Cycler"
@@ -22,7 +22,11 @@ class Scrambler extends React.Component {
 
         for (let i = 0, lastStartFrame = 0, dec = maxFrames; i < longer; i++) {
             const frames = maxFrames / longer;
-            const humanLikeTime = lastScrambled.length < end.length ? lastStartFrame + Math.floor(Math.random() * frames * 0.9) : dec - Math.floor(Math.random() * frames * 0.9);
+            const humanLikeTime = lastScrambled.length < end.length ?
+                lastStartFrame + Math.floor(Math.random() * frames * 0.9) :
+                dec - Math.floor(Math.random() * frames * 0.9);
+
+            console.log(humanLikeTime);
 
             const oldCharacter = lastScrambled[i] || "";
             const newCharacter = end[i] || "";
@@ -47,37 +51,42 @@ class Scrambler extends React.Component {
         let stringBuilder = "";
         let mode = false;
 
-        this.queue = this.queue.map(process => {
+        this.queue = this.queue.map((process, i) => {
             const { oldCharacter, newCharacter, startTransformation, endTransformation, scrambleChar } = process;
             const { humanLike } = this.props;
 
             let append = oldCharacter;
             let returnThis = process;
+            let modifyMode = false;
 
             if (humanLike && this.frame > startTransformation) {
-                if (newCharacter === "") {
-                    return process;
-                }
-
                 append = newCharacter;
             } else if (this.frame < startTransformation) {
-                if (oldCharacter === "") {
-                    return process;
-                }
-
                 append = oldCharacter;
             } else if (this.frame > endTransformation) {
                 append = newCharacter;
                 charactersProcessed++;
             } else if (scrambleChar) {
                 append = scrambleChar;
+                modifyMode = true;
             } else if (!humanLike && Math.random() < 0.05) {
                 character = this.randomCharacter();
                 append = character;
+                modifyMode = true;
 
                 returnThis = Object.assign({}, process, { scrambleChar: character });
             } else {
                 append = oldCharacter;
+            }
+
+            // If modes are equal, just append to the builder.
+            // Otherwise, push the built string onto the render queue and flip the mode.
+            if (modifyMode === mode) {
+                stringBuilder += append;
+            } else {
+                renderComponents.push(stringBuilder);
+                stringBuilder = "" + append;
+                mode = !mode;
             }
 
             nextDisplay += append;
@@ -85,7 +94,11 @@ class Scrambler extends React.Component {
             return returnThis;
         });
 
-        this.setState({ display: nextDisplay });
+        if (stringBuilder !== "") {
+            renderComponents.push(stringBuilder);
+        }
+
+        this.setState({ display: nextDisplay, components: renderComponents });
 
         if (charactersProcessed < this.queue.length) {
             this.renderFrame = requestAnimationFrame(this.updateFrame);
@@ -110,7 +123,7 @@ class Scrambler extends React.Component {
     componentWillReceiveProps(nextProps) {
         // If new text is passed (possibly from a setState in the parent component), restart scrambling.
         this.frame = 0;
-        this.startScrambling(nextProps.renderIn, nextProps.children, nextProps.changeFrom);
+        this.startScrambling(nextProps.children, nextProps.changeFrom, nextProps.renderIn);
     }
 
     componentDidMount() {
@@ -127,7 +140,7 @@ class Scrambler extends React.Component {
         this.characters = characters || "+/\\_-";
 
         this.frame = 0;
-        this.startScrambling(renderIn, scramble, "");
+        this.startScrambling(scramble, "", renderIn);
     }
 
     render() {
