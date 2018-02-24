@@ -7,7 +7,8 @@ class Scrambler extends React.Component {
         this.updateFrame = this.updateFrame.bind(this);
 
         this.state = {
-            display: ""
+            display: "",
+            components: []
         };
     }
 
@@ -42,44 +43,46 @@ class Scrambler extends React.Component {
         let nextDisplay = "";
         let character;
 
+        const renderComponents = [];
+        let stringBuilder = "";
+        let mode = false;
+
         this.queue = this.queue.map(process => {
             const { oldCharacter, newCharacter, startTransformation, endTransformation, scrambleChar } = process;
             const { humanLike } = this.props;
 
+            let append = oldCharacter;
+            let returnThis = process;
+
             if (humanLike && this.frame > startTransformation) {
-                nextDisplay += newCharacter;
-                return process;
-            }
+                if (newCharacter === "") {
+                    return process;
+                }
 
-            if (this.frame < startTransformation) {
-                nextDisplay += oldCharacter;
+                append = newCharacter;
+            } else if (this.frame < startTransformation) {
+                if (oldCharacter === "") {
+                    return process;
+                }
 
-                return process;
-            }
-
-            if (this.frame > endTransformation) {
-                nextDisplay += newCharacter;
+                append = oldCharacter;
+            } else if (this.frame > endTransformation) {
+                append = newCharacter;
                 charactersProcessed++;
-
-                return process;
-            }
-
-            if (scrambleChar) {
-                nextDisplay += scrambleChar;
-
-                return process;
-            }
-
-            if (!humanLike && Math.random() < 0.05) {
+            } else if (scrambleChar) {
+                append = scrambleChar;
+            } else if (!humanLike && Math.random() < 0.05) {
                 character = this.randomCharacter();
-                nextDisplay += character;
+                append = character;
 
-                return Object.assign({}, process, { scrambleChar: character });
+                returnThis = Object.assign({}, process, { scrambleChar: character });
+            } else {
+                append = oldCharacter;
             }
 
-            nextDisplay += oldCharacter;
+            nextDisplay += append;
 
-            return process;
+            return returnThis;
         });
 
         this.setState({ display: nextDisplay });
@@ -87,6 +90,16 @@ class Scrambler extends React.Component {
         if (charactersProcessed < this.queue.length) {
             this.renderFrame = requestAnimationFrame(this.updateFrame);
             this.frame++;
+        } else {
+            // this.doneScrambling();
+        }
+    }
+
+    doneScrambling() {
+        const { onScrambleDone } = this.props;
+
+        if (typeof onScrambleDone === "function") {
+            onScrambleDone(this.state.display);
         }
     }
 
@@ -101,10 +114,16 @@ class Scrambler extends React.Component {
     }
 
     componentDidMount() {
-        const { renderIn, characters, children } = this.props;
+        const { renderIn, characters, children, text } = this.props;
+        let scramble;
 
-        const scramble = typeof children === "string" ? children :
-            "Component Scramble only takes a single string as a child!";
+        if (typeof text === "string" && text !== "") {
+            scramble = text;
+        } else {
+            scramble = typeof children === "string" ? children :
+                "Component Scramble only takes a single string as a child!";
+        }
+
         this.characters = characters || "+/\\_-";
 
         this.frame = 0;
@@ -112,7 +131,7 @@ class Scrambler extends React.Component {
     }
 
     render() {
-        return this.state.display;
+        return this.props.dev ? this.state.components : this.state.display;
     }
 }
 
