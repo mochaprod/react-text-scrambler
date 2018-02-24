@@ -26,8 +26,6 @@ class Scrambler extends React.Component {
                 lastStartFrame + Math.floor(Math.random() * frames * 0.9) :
                 dec - Math.floor(Math.random() * frames * 0.9);
 
-            console.log(humanLikeTime);
-
             const oldCharacter = lastScrambled[i] || "";
             const newCharacter = end[i] || "";
             const startTransformation = this.props.humanLike ? humanLikeTime : Math.floor(Math.random() * 60);
@@ -81,10 +79,13 @@ class Scrambler extends React.Component {
 
             // If modes are equal, just append to the builder.
             // Otherwise, push the built string onto the render queue and flip the mode.
-            if (modifyMode === mode) {
+            if (modifyMode === mode || !this.props.wrap) {
                 stringBuilder += append;
             } else {
-                renderComponents.push(stringBuilder);
+                const Wrap = this.props.wrap;
+                let push = Wrap && mode ? (<Wrap>{ stringBuilder }</Wrap>) : stringBuilder;
+
+                renderComponents.push(push);
                 stringBuilder = "" + append;
                 mode = !mode;
             }
