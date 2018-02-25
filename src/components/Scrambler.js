@@ -12,6 +12,12 @@ class Scrambler extends React.Component {
         };
     }
 
+    getNextComponent(mode, str, key) {
+        const Wrap = this.props.wrap && mode ? this.props.wrap : React.Fragment;
+
+        return (<Wrap key={ key }>{ str }</Wrap>);
+    }
+
     startScrambling(end, start, renderIn = 3000) {
         this.queue = [];
 
@@ -79,15 +85,14 @@ class Scrambler extends React.Component {
 
             // If modes are equal, just append to the builder.
             // Otherwise, push the built string onto the render queue and flip the mode.
-            if (modifyMode === mode || !this.props.wrap) {
-                stringBuilder += append;
-            } else {
-                const Wrap = this.props.wrap;
-                let push = Wrap && mode ? (<Wrap>{ stringBuilder }</Wrap>) : stringBuilder;
+            if (modifyMode !== mode) {
+                renderComponents.push(this.getNextComponent(mode,
+                    stringBuilder, renderComponents.length));
 
-                renderComponents.push(push);
                 stringBuilder = "" + append;
                 mode = !mode;
+            } else {
+                stringBuilder += append;
             }
 
             nextDisplay += append;
@@ -96,7 +101,8 @@ class Scrambler extends React.Component {
         });
 
         if (stringBuilder !== "") {
-            renderComponents.push(stringBuilder);
+            renderComponents.push(this.getNextComponent(mode,
+                stringBuilder, renderComponents.length));
         }
 
         this.setState({ display: nextDisplay, components: renderComponents });
@@ -145,7 +151,8 @@ class Scrambler extends React.Component {
     }
 
     render() {
-        return this.props.dev ? this.state.components : this.state.display;
+        return this.props.deprecatedFeatures ?
+            this.state.display : this.state.components;
     }
 }
 
