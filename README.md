@@ -1,6 +1,8 @@
 # react-text-scrambler
+![Version](https://img.shields.io/github/package-json/v/benjhu/react-text-scrambler.svg)
+![License](https://img.shields.io/github/license/benjhu/react-text-scrambler.svg)
 
-Components for text animation in **React**.
+**React** components for text animation.
 
 ## Usage
 
@@ -12,24 +14,27 @@ import { Scrambler, Cycler } from "react-text-scrambler";
 
 ### Scrambler
 
+The `Scrambler` receives the text to be scrambled as a prop. It scrambles text only **once**.
+
 ```html
-<Scrambler>This text will be scrambled!</Scrambler>
+<Scrambler text="This text will be scrambled!" />
 ```
 
 #### Props
 
 | Prop | Default Value | |
 |------------|---------------|-------------------------------------------------------------------------------------------|
-| `children` | `""` | A string of text to scramble. |
+| `children` | `""` | (**Deprecated**) A string of text to scramble. |
+| text | `""` | Specify text to scramble. If no text is provided in this prop, any string in the `children` prop is used as the fallback text. |
 | characters | `"+/\\_-"` | Characters to be randomly included in each scramble (only if `humanLike` is `false`). |
 | humanLike | `false` | If `true`, instead of scrambling characters, text appears like typing. |
-| renderIn | `undefined` | The `Scrambler` will complete scrambling in the provided time in milliseconds. |
+| renderIn | `3000` | The `Scrambler` will complete scrambling in the provided time in milliseconds. |
 | changeFrom | `""` | The Scrambler will scramble text provided in this prop to the string provided in `children`. |
-| text | `""` | If `children` is undefined, text from this prop is scrambled instead. If both are set, `children` is prioritized. |
+| wrap | `undefined` | Scrambled characters are wrapped in a provided `Wrap` component. This allows characters to be styled or displayed differently. |
 
 ### Cycler
 
-The `Cycler` renders `Scrambler`s in a specified interval. It automatically passes the `changeFrom` prop to the `Scrambler` for the next text in queue to create seamless transitions between texts.
+The `Cycler` renders `Scrambler`s in a specified interval. It automatically passes the `changeFrom` prop to the `Scrambler` for the next string in queue to create seamless transitions between scrambles.
 
 If `humanLike` is `true`, empty strings, `""` are inserted in between each string in `strings` to simulate backspacing and typing.
 
@@ -51,7 +56,7 @@ const MyComponent = props => {
     ...
 
     return (
-        <Scrambler humanLike>This text will be typed out.</Scrambler>
+        <Scrambler text="This text will be typed out!" humanLike />
     );
 };
 ```
@@ -68,7 +73,8 @@ const MyComponent = props => {
 
     return (
         <Scrambler
-            characters={ characters }>This text will be typed out.</Scrambler>
+            text="This text will be typed out!"
+            characters={ characters } />
     );
 };
 ```
