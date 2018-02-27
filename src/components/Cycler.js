@@ -50,7 +50,8 @@ class Cycler extends React.Component {
     }
 
     insertChar(array, char = "") {
-        return array.reduce((accumulator, currentValue) => [...accumulator, currentValue, char], []);
+        return array.reduce((accumulator, currentValue) =>
+            [...accumulator, currentValue, char], []);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -71,7 +72,6 @@ class Cycler extends React.Component {
     }
 
     componentDidMount() {
-        console.log("Mounted.");
         this.cycle(this.props.duration);
     }
 

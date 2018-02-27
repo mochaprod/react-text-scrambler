@@ -130,7 +130,9 @@ class Scrambler extends React.Component {
     componentWillReceiveProps(nextProps) {
         // If new text is passed (possibly from a setState in the parent component), restart scrambling.
         this.frame = 0;
-        this.startScrambling(nextProps.children, nextProps.changeFrom, nextProps.renderIn);
+        this.startScrambling(nextProps.children,
+            nextProps.changeFrom,
+            nextProps.renderIn || this.props.renderIn);
     }
 
     componentDidMount() {
