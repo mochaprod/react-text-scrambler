@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Scrambler from "./Scrambler";
 
 class Cycler extends React.Component {
@@ -35,7 +36,7 @@ class Cycler extends React.Component {
                 this.changeRenderText(cycleThis[iteration], previous);
 
                 if (this.state.cycling) {
-                    iterate((iteration + 1) % cycleThis.length, cycleThis[iteration]);
+                    this.timeout = iterate((iteration + 1) % cycleThis.length, cycleThis[iteration]);
                 }
             }, time);
         };
@@ -72,7 +73,9 @@ class Cycler extends React.Component {
     }
 
     componentDidMount() {
-        this.cycle(this.props.duration);
+        const { duration, delay } = this.props;
+
+        this.cycle(duration + delay);
     }
 
     render() {
@@ -84,5 +87,21 @@ class Cycler extends React.Component {
         );
     }
 }
+
+Cycler.defaultProps = {
+    strings: ["The Scrambler needs some strings!"],
+    characters: "+/\\_-",
+    humanLike: false,
+    duration: 3000,
+    delay: 1000
+};
+
+Cycler.proptypes = {
+    strings: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    characters: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    humanLike: PropTypes.bool,
+    duration: PropTypes.number,
+    delay: PropTypes.number
+};
 
 export default Cycler;
