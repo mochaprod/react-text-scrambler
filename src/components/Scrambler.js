@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 class Scrambler extends React.Component {
     constructor(props) {
@@ -34,8 +35,13 @@ class Scrambler extends React.Component {
 
             const oldCharacter = lastScrambled[i] || "";
             const newCharacter = end[i] || "";
-            const startTransformation = this.props.humanLike ? humanLikeTime : Math.floor(Math.random() * 60);
-            const endTransformation = Math.floor(Math.random() * 90) + startTransformation;
+
+            const startTransformation = this.props.humanLike ?
+                humanLikeTime :
+                Math.floor(Math.random() * maxFrames * 0.4);
+            const transformationDuration = Math.floor(Math.random() *
+                (maxFrames - startTransformation));
+            const endTransformation = transformationDuration + startTransformation;
 
             dec = startTransformation;
             lastStartFrame = startTransformation;
@@ -132,7 +138,7 @@ class Scrambler extends React.Component {
         this.frame = 0;
         this.startScrambling(nextProps.children,
             nextProps.changeFrom,
-            nextProps.renderIn || this.props.renderIn);
+            nextProps.renderIn);
     }
 
     componentDidMount() {
@@ -143,10 +149,10 @@ class Scrambler extends React.Component {
             scramble = text;
         } else {
             scramble = typeof children === "string" ? children :
-                "Component Scramble only takes a single string as a child!";
+                "The Scrambler component only takes a single string as a child!";
         }
 
-        this.characters = characters || "+/\\_-";
+        this.characters = characters;
 
         this.frame = 0;
         this.startScrambling(scramble, "", renderIn);
@@ -157,5 +163,17 @@ class Scrambler extends React.Component {
             this.state.display : this.state.components;
     }
 }
+
+Scrambler.defaultProps = {
+    renderIn: 3000,
+    humanLike: false,
+    characters: "+/\\_-"
+};
+
+Scrambler.proptypes = {
+    renderIn: PropTypes.number,
+    humanLike: PropTypes.bool,
+    characters: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
+};
 
 export default Scrambler;
