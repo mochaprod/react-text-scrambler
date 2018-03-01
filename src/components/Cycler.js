@@ -81,6 +81,7 @@ class Cycler extends React.Component {
     render() {
         return (
             <Scrambler
+                wrap={ this.props.wrap }
                 changeFrom={ this.state.previousText }
                 humanLike={ this.props.humanLike }
                 renderIn={ this.props.duration }>{ this.state.renderText }</Scrambler>
