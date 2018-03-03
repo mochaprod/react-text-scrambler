@@ -142,6 +142,10 @@ class Scrambler extends React.Component {
     }
 
     componentDidMount() {
+        if (this.props.static) {
+            return;
+        }
+
         const { renderIn, characters, children, text } = this.props;
         let scramble;
 
@@ -159,6 +163,10 @@ class Scrambler extends React.Component {
     }
 
     render() {
+        if (this.props.static) {
+            return this.props.text;
+        }
+
         return this.props.deprecatedFeatures ?
             this.state.display : this.state.components;
     }
