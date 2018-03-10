@@ -7,6 +7,7 @@ class Cycler extends React.Component {
         super(props);
 
         this.cycle = this.cycle.bind(this);
+        this.cycling = true;
 
         this.state = {
             cycling: true,
@@ -33,9 +34,8 @@ class Cycler extends React.Component {
             }
 
             return setTimeout(() => {
-                this.changeRenderText(cycleThis[iteration], previous);
-
-                if (this.state.cycling) {
+                if (this.state.cycling && this.cycling) {
+                    this.changeRenderText(cycleThis[iteration], previous);
                     this.timeout = iterate((iteration + 1) % cycleThis.length, cycleThis[iteration]);
                 }
             }, time);
@@ -75,7 +75,12 @@ class Cycler extends React.Component {
     componentDidMount() {
         const { duration, delay } = this.props;
 
+        this.cycling = true;
         this.cycle(duration + delay);
+    }
+
+    componentWillUnmount() {
+        this.cycling = false;
     }
 
     render() {

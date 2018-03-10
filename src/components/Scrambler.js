@@ -6,6 +6,7 @@ class Scrambler extends React.Component {
         super(props);
 
         this.updateFrame = this.updateFrame.bind(this);
+        this.scrambling = true;
 
         this.state = {
             display: "",
@@ -114,13 +115,18 @@ class Scrambler extends React.Component {
                 stringBuilder, renderComponents.length));
         }
 
-        this.setState({ display: nextDisplay, components: renderComponents });
-
-        if (charactersProcessed < this.queue.length) {
-            this.renderFrame = requestAnimationFrame(this.updateFrame);
-            this.frame++;
+        if (!this.scrambling) {
+            // Prevent unsafe frame updates
+            cancelAnimationFrame(this.renderFrame);
         } else {
-            // this.doneScrambling();
+            this.setState({ display: nextDisplay, components: renderComponents });
+
+            if (charactersProcessed < this.queue.length) {
+                this.renderFrame = requestAnimationFrame(this.updateFrame);
+                this.frame++;
+            } else {
+                // this.doneScrambling();
+            }
         }
     }
 
@@ -169,9 +175,14 @@ class Scrambler extends React.Component {
         const scramble = this.getScrambleText(this.props);
 
         this.characters = characters;
+        this.scrambling = true;
 
         this.frame = 0;
         this.startScrambling(scramble, "", renderIn);
+    }
+
+    componentWillUnmount() {
+        this.scrambling = false;
     }
 
     render() {
