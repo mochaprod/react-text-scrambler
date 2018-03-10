@@ -16,11 +16,14 @@ class Scrambler extends React.Component {
     getNextComponent(mode, str, key) {
         const Wrap = this.props.wrap && mode ? this.props.wrap : React.Fragment;
 
-        return (<Wrap key={ key }>{ str }</Wrap>);
+        return (
+            <Wrap key={ key }>{ str }</Wrap>
+        );
     }
 
     startScrambling(end, start, renderIn = 3000) {
         this.queue = [];
+        end = end || "";
 
         // This would be provided by a parent component "Cycler"
         const lastScrambled = start || "";
@@ -133,10 +136,26 @@ class Scrambler extends React.Component {
         return this.characters[Math.floor(Math.random() * this.characters.length)];
     }
 
+    getScrambleText(props) {
+        const { text, children } = props;
+
+        if (typeof text === "string" && text !== "") {
+            return text;
+        } else if (typeof children === "string") {
+            return children;
+        }
+
+        return "No string was provided to the text prop!";
+    }
+
     componentWillReceiveProps(nextProps) {
+        if (this.props.static) {
+            return;
+        }
+
         // If new text is passed (possibly from a setState in the parent component), restart scrambling.
         this.frame = 0;
-        this.startScrambling(nextProps.children,
+        this.startScrambling(this.getScrambleText(nextProps),
             nextProps.changeFrom,
             nextProps.renderIn);
     }
@@ -146,15 +165,8 @@ class Scrambler extends React.Component {
             return;
         }
 
-        const { renderIn, characters, children, text } = this.props;
-        let scramble;
-
-        if (typeof text === "string" && text !== "") {
-            scramble = text;
-        } else {
-            scramble = typeof children === "string" ? children :
-                "The Scrambler component only takes a single string as a child!";
-        }
+        const { renderIn, characters } = this.props;
+        const scramble = this.getScrambleText(this.props);
 
         this.characters = characters;
 
