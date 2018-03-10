@@ -139,7 +139,7 @@ class Scrambler extends React.Component {
     getScrambleText(props) {
         const { text, children } = props;
 
-        if (typeof text === "string" && text !== "") {
+        if (typeof text === "string") {
             return text;
         } else if (typeof children === "string") {
             return children;
