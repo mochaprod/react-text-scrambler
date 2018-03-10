@@ -1,20 +1,17 @@
-const webpack = require("webpack");
 const path = require("path");
 
 module.exports = {
     externals: {
         "react": "React",
-        "react-dom": "ReactDOM"
+        "react-dom": "ReactDOM",
+        "react-text-scrambler": "ReactTextScrambler"
     },
     entry: {
-        "./dist": "./src/index.js",
-        "./examples/static/dist": "./src/index.js"
+        "./examples/static/dist": "./examples/demo.js"
     },
     output: {
-        library: "ReactTextScrambler",
-        libraryTarget: "umd",
         path: path.resolve(__dirname),
-        filename: "[name]/build.js"
+        filename: "[name]/examples.js"
     },
     module: {
         rules: [
@@ -27,8 +24,5 @@ module.exports = {
                 }
             }
         ]
-    },
-    plugins: [
-        new webpack.optimize.UglifyJsPlugin()
-    ]
+    }
 };

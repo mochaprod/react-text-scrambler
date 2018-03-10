@@ -1,10 +1,14 @@
 {
   "name": "react-text-scrambler",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "React components for simple text animations",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "build": "webpack"
+    "build:umd": "webpack",
+    "build:demo": "webpack --config webpack.config.demo.js",
+    "build:commonjs": "babel src --out-dir lib",
+    "site": "node examples/app",
+    "serve": "npm run build:umd && npm run build:demo && npm run site"
   },
   "repository": {
     "type": "git",
@@ -32,6 +36,7 @@
     "eslint-plugin-react": "^7.6.1",
     "eslint-plugin-standard": "^3.0.1",
     "express": "^4.16.2",
+    "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "webpack": "^3.10.0"

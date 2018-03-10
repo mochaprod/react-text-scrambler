@@ -1,0 +1,8 @@
+src/
+tests/
+node_modules/
+
+.babelrc
+.eslintrc.js
+README.md
+webpack.config.js
