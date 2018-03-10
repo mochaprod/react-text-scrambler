@@ -1,4 +1,5 @@
-# react-text-scrambler
+# react-text-scrambler (v1.1.1)
+
 ![Version](https://img.shields.io/github/package-json/v/benjhu/react-text-scrambler.svg)
 ![License](https://img.shields.io/github/license/benjhu/react-text-scrambler.svg)
 
@@ -25,12 +26,12 @@ The `Scrambler` receives the text to be scrambled as a prop. It scrambles text o
 | Prop | Default Value | |
 |------------|---------------|-------------------------------------------------------------------------------------------|
 | `children` | `""` | (**Deprecated**) A string of text to scramble. |
-| text | `""` | Specify text to scramble. If no text is provided in this prop, any string in the `children` prop is used as the fallback text. |
-| characters | `"+/\\_-"` | Characters to be randomly included in each scramble (only if `humanLike` is `false`). |
-| humanLike | `false` | If `true`, instead of scrambling characters, text appears like typing. |
-| renderIn | `3000` | The `Scrambler` will complete scrambling in the provided time in milliseconds. |
-| changeFrom | `""` | The Scrambler will scramble text provided in this prop to the string provided in `children`. |
-| wrap | `undefined` | Scrambled characters are wrapped in a provided `Wrap` component. This allows characters to be styled or displayed differently. |
+| `text` | `""` | Specify text to scramble. If no text is provided in this prop, any string in the `children` prop is used as the fallback text. |
+| `characters` | `"+/\\_-"` | Characters to be randomly included in each scramble (only if `humanLike` is `false`). |
+| `humanLike` | `false` | If `true`, instead of scrambling characters, text appears like typing. |
+| `renderIn` | `3000` | The `Scrambler` will complete scrambling in the provided time in milliseconds. |
+| `changeFrom` | `""` | The Scrambler will scramble text provided in this prop to the string provided in `text`. |
+| `wrap` | `undefined` | Scrambled characters are wrapped in a provided `Wrap` component. Style scrambled characters as you see fit! |
 
 ### Cycler
 
@@ -40,10 +41,10 @@ If `humanLike` is `true`, empty strings, `""` are inserted in between each strin
 
 | Prop | Default Value | |
 |-----------|---------------|--------------------------------------------|
-| humanLike | `false` | Passed to `Scrambler`s `humanLike` prop. |
-| duration | `3000` | The duration of each `Scrambler`. |
-| strings | `[]` | An array of strings to scramble. |
-| characters | `undefined` | A string of characters to scramble with. If `undefined`, `Scrambler` will use its default `characters` value. |
+| `humanLike` | `false` | Passed to `Scrambler`s `humanLike` prop. |
+| `duration` | `3000` | The duration of each `Scrambler`. |
+| `strings` | `[]` | An array of strings to scramble. |
+| `characters` | `undefined` | A string of characters to scramble with. If `undefined`, `Scrambler` will use its default `characters` value. |
 
 ## Examples
 
