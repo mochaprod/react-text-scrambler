@@ -1,4 +1,4 @@
-# react-text-scrambler (v1.1.1)
+# react-text-scrambler (v1.1.2)
 
 ![Version](https://img.shields.io/github/package-json/v/benjhu/react-text-scrambler.svg)
 ![License](https://img.shields.io/github/license/benjhu/react-text-scrambler.svg)
@@ -13,7 +13,7 @@ Import the components:
 import { Scrambler, Cycler } from "react-text-scrambler";
 ```
 
-### Scrambler
+### `Scrambler`
 
 The `Scrambler` receives the text to be scrambled as a prop. It scrambles text only **once**.
 
@@ -21,11 +21,9 @@ The `Scrambler` receives the text to be scrambled as a prop. It scrambles text o
 <Scrambler text="This text will be scrambled!" />
 ```
 
-#### Props
-
 | Prop | Default Value | |
 |------------|---------------|-------------------------------------------------------------------------------------------|
-| `children` | `""` | (**Deprecated**) A string of text to scramble. |
+| `children` | `""` | (**Deprecated: removal in 2.0.0**) A string of text to scramble. |
 | `text` | `""` | Specify text to scramble. If no text is provided in this prop, any string in the `children` prop is used as the fallback text. |
 | `characters` | `"+/\\_-"` | Characters to be randomly included in each scramble (only if `humanLike` is `false`). |
 | `humanLike` | `false` | If `true`, instead of scrambling characters, text appears like typing. |
