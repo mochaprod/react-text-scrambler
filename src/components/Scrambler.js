@@ -198,12 +198,14 @@ class Scrambler extends React.Component {
 Scrambler.defaultProps = {
     renderIn: 3000,
     humanLike: false,
+    startDelay: 0,
     characters: "+/\\_-"
 };
 
 Scrambler.proptypes = {
     renderIn: PropTypes.number,
     humanLike: PropTypes.bool,
+    startDelay: PropTypes.number,
     characters: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
 };
 

@@ -21,28 +21,34 @@ class Cycler extends React.Component {
     }
 
     cycle(time = 3000) {
-        const { humanLike, strings, callback } = this.props;
+        const { humanLike, strings, callback, iterations } = this.props;
         let cycleThis = strings;
 
         if (humanLike) {
             cycleThis = this.insertChar(strings);
         }
 
-        const iterate = (iteration = 0, previous) => {
+        const iterate = (total, iteration = 0, previous) => {
             if (typeof callback === "function") {
                 callback(cycleThis[iteration], iteration);
+            }
+
+            if (iterations !== 0 && total >= iterations) {
+                return;
             }
 
             return setTimeout(() => {
                 if (this.state.cycling && this.cycling) {
                     this.changeRenderText(cycleThis[iteration], previous);
-                    this.timeout = iterate((iteration + 1) % cycleThis.length, cycleThis[iteration]);
+                    this.timeout = iterate(total + 1,
+                        (iteration + 1) % cycleThis.length,
+                        cycleThis[iteration]);
                 }
             }, time);
         };
 
         this.changeRenderText(cycleThis[0]);
-        this.timeout = iterate(1, cycleThis[0]);
+        this.timeout = iterate(0, 1, cycleThis[0]);
     }
 
     stop() {
@@ -100,7 +106,9 @@ Cycler.defaultProps = {
     characters: "+/\\_-",
     humanLike: false,
     duration: 3000,
-    delay: 1000
+    delay: 1000,
+    startDelay: 0,
+    iterations: 0
 };
 
 Cycler.proptypes = {
@@ -108,7 +116,9 @@ Cycler.proptypes = {
     characters: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
     humanLike: PropTypes.bool,
     duration: PropTypes.number,
-    delay: PropTypes.number
+    delay: PropTypes.number,
+    startDelay: PropTypes.number,
+    iterations: PropTypes.number
 };
 
 export default Cycler;
