@@ -1,6 +1,7 @@
 const path = require("path");
 
 module.exports = {
+    mode: "development",
     externals: {
         "react": "React",
         "react-dom": "ReactDOM",

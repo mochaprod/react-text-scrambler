@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 
 module.exports = {
+    mode: "development",
     externals: {
         "react": "React",
         "react-dom": "ReactDOM"
@@ -27,8 +28,5 @@ module.exports = {
                 }
             }
         ]
-    },
-    plugins: [
-        new webpack.optimize.UglifyJsPlugin()
-    ]
+    }
 };
