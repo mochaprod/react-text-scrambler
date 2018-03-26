@@ -2,16 +2,37 @@ import React from "react";
 import PropTypes from "prop-types";
 
 class Scrambler extends React.Component {
+    static propTypes = {
+        text: PropTypes.string,
+        wrap: PropTypes.func,
+        renderIn: PropTypes.number,
+        humanLike: PropTypes.bool,
+        changeFrom: PropTypes.string,
+        startDelay: PropTypes.number,
+        static: PropTypes.bool,
+        characters: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+        deprecatedFeatures: PropTypes.bool,
+        onScrambleDone: PropTypes.func
+    };
+
+    static defaultProps = {
+        renderIn: 3000,
+        humanLike: false,
+        startDelay: 0,
+        characters: "+/\\_-"
+    };
+
+    state = {
+        // display state will be completely removed later on?
+        display: "",
+        components: []
+    };
+
     constructor(props) {
         super(props);
 
         this.updateFrame = this.updateFrame.bind(this);
         this.scrambling = true;
-
-        this.state = {
-            display: "",
-            components: []
-        };
     }
 
     getNextComponent(mode, str, key) {
@@ -196,25 +217,5 @@ class Scrambler extends React.Component {
             this.state.display : this.state.components;
     }
 }
-
-Scrambler.defaultProps = {
-    renderIn: 3000,
-    humanLike: false,
-    startDelay: 0,
-    characters: "+/\\_-"
-};
-
-Scrambler.propTypes = {
-    text: PropTypes.string,
-    wrap: PropTypes.func,
-    renderIn: PropTypes.number,
-    humanLike: PropTypes.bool,
-    changeFrom: PropTypes.string,
-    startDelay: PropTypes.number,
-    static: PropTypes.bool,
-    characters: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-    deprecatedFeatures: PropTypes.bool,
-    onScrambleDone: PropTypes.func
-};
 
 export default Scrambler;

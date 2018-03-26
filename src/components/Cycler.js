@@ -3,17 +3,39 @@ import PropTypes from "prop-types";
 import Scrambler from "./Scrambler";
 
 class Cycler extends React.Component {
+    static propTypes = {
+        strings: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+        characters: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+        humanLike: PropTypes.bool,
+        duration: PropTypes.number,
+        delay: PropTypes.number,
+        startDelay: PropTypes.number,
+        iterations: PropTypes.number,
+        wrap: PropTypes.func,
+        onIteration: PropTypes.func
+    };
+
+    static defaultProps = {
+        strings: ["The Scrambler needs some strings!"],
+        characters: "+/\\_-",
+        humanLike: false,
+        duration: 3000,
+        delay: 1000,
+        startDelay: 0,
+        iterations: 0
+    };
+
+    state = {
+        cycling: true,
+        renderText: "",
+        previousText: ""
+    };
+
     constructor(props) {
         super(props);
 
         this.cycle = this.cycle.bind(this);
         this.cycling = true;
-
-        this.state = {
-            cycling: true,
-            renderText: "",
-            previousText: ""
-        };
     }
 
     changeRenderText(text, previous) {
@@ -100,27 +122,5 @@ class Cycler extends React.Component {
         );
     }
 }
-
-Cycler.defaultProps = {
-    strings: ["The Scrambler needs some strings!"],
-    characters: "+/\\_-",
-    humanLike: false,
-    duration: 3000,
-    delay: 1000,
-    startDelay: 0,
-    iterations: 0
-};
-
-Cycler.propTypes = {
-    strings: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-    characters: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-    humanLike: PropTypes.bool,
-    duration: PropTypes.number,
-    delay: PropTypes.number,
-    startDelay: PropTypes.number,
-    iterations: PropTypes.number,
-    wrap: PropTypes.func,
-    onIteration: PropTypes.func
-};
 
 export default Cycler;
