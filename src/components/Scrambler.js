@@ -15,7 +15,9 @@ class Scrambler extends React.Component {
     }
 
     getNextComponent(mode, str, key) {
-        const Wrap = this.props.wrap && mode ? this.props.wrap : React.Fragment;
+        const Wrap = this.props.wrap && mode ?
+            this.props.wrap :
+            React.Fragment;
 
         return (
             <Wrap key={ key }>{ str }</Wrap>
@@ -202,11 +204,17 @@ Scrambler.defaultProps = {
     characters: "+/\\_-"
 };
 
-Scrambler.proptypes = {
+Scrambler.propTypes = {
+    text: PropTypes.string,
+    wrap: PropTypes.func,
     renderIn: PropTypes.number,
     humanLike: PropTypes.bool,
+    changeFrom: PropTypes.string,
     startDelay: PropTypes.number,
-    characters: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
+    static: PropTypes.bool,
+    characters: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    deprecatedFeatures: PropTypes.bool,
+    onScrambleDone: PropTypes.func
 };
 
 export default Scrambler;

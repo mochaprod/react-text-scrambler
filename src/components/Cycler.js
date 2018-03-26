@@ -21,7 +21,7 @@ class Cycler extends React.Component {
     }
 
     cycle(time = 3000) {
-        const { humanLike, strings, callback, iterations } = this.props;
+        const { humanLike, strings, onIteration, iterations } = this.props;
         let cycleThis = strings;
 
         if (humanLike) {
@@ -29,8 +29,8 @@ class Cycler extends React.Component {
         }
 
         const iterate = (total, iteration = 0, previous) => {
-            if (typeof callback === "function") {
-                callback(cycleThis[iteration], iteration);
+            if (typeof onIteration === "function") {
+                onIteration(cycleThis[iteration], iteration);
             }
 
             if (iterations !== 0 && total >= iterations) {
@@ -111,14 +111,16 @@ Cycler.defaultProps = {
     iterations: 0
 };
 
-Cycler.proptypes = {
+Cycler.propTypes = {
     strings: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
     characters: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
     humanLike: PropTypes.bool,
     duration: PropTypes.number,
     delay: PropTypes.number,
     startDelay: PropTypes.number,
-    iterations: PropTypes.number
+    iterations: PropTypes.number,
+    wrap: PropTypes.func,
+    onIteration: PropTypes.func
 };
 
 export default Cycler;
