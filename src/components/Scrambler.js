@@ -7,6 +7,7 @@ class Scrambler extends React.Component {
         wrap: PropTypes.func,
         renderIn: PropTypes.number,
         humanLike: PropTypes.bool,
+        typewriter: PropTypes.bool,
         changeFrom: PropTypes.string,
         startDelay: PropTypes.number,
         static: PropTypes.bool,
@@ -18,6 +19,7 @@ class Scrambler extends React.Component {
     static defaultProps = {
         renderIn: 3000,
         humanLike: false,
+        typewriter: false,
         startDelay: 0,
         characters: "+/\\_-"
     };
@@ -63,7 +65,9 @@ class Scrambler extends React.Component {
             const oldCharacter = lastScrambled[i] || "";
             const newCharacter = end[i] || "";
 
-            const startTransformation = this.props.humanLike ?
+            // Renaming prop for "typing effect" to typewriter.
+            // REMOVAL of 'humanLike' in v2.0.0
+            const startTransformation = this.props.humanLike || this.props.typewriter ?
                 humanLikeTime :
                 Math.floor(Math.random() * maxFrames * 0.4);
             const transformationDuration = Math.floor(Math.random() *
@@ -72,7 +76,11 @@ class Scrambler extends React.Component {
 
             dec = startTransformation;
             lastStartFrame = startTransformation;
-            this.queue.push({ oldCharacter, newCharacter, startTransformation, endTransformation });
+            this.queue.push({
+                oldCharacter,
+                newCharacter,
+                startTransformation,
+                endTransformation });
         }
 
         cancelAnimationFrame(this.renderFrame);
@@ -89,14 +97,20 @@ class Scrambler extends React.Component {
         let mode = false;
 
         this.queue = this.queue.map((process, i) => {
-            const { oldCharacter, newCharacter, startTransformation, endTransformation, scrambleChar } = process;
-            const { humanLike } = this.props;
+            // Removal of humanLike in v2.0.0
+            const {
+                oldCharacter,
+                newCharacter,
+                startTransformation,
+                endTransformation,
+                scrambleChar } = process;
+            const { humanLike, typewriter } = this.props;
 
             let append = oldCharacter;
             let returnThis = process;
             let modifyMode = false;
 
-            if (humanLike && this.frame > startTransformation) {
+            if ((humanLike || typewriter) && this.frame > startTransformation) {
                 append = newCharacter;
             } else if (this.frame < startTransformation) {
                 append = oldCharacter;
@@ -182,7 +196,8 @@ class Scrambler extends React.Component {
             return;
         }
 
-        // If new text is passed (possibly from a setState in the parent component), restart scrambling.
+        // If new text is passed (possibly from a setState in the parent component),
+        // restart scrambling.
         this.frame = 0;
         this.startScrambling(this.getScrambleText(nextProps),
             nextProps.changeFrom,
