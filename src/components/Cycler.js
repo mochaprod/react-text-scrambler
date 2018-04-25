@@ -101,10 +101,10 @@ class Cycler extends React.Component {
     }
 
     componentDidMount() {
-        const { duration, delay } = this.props;
+        const { startDelay, duration, delay } = this.props;
 
         this.cycling = true;
-        this.cycle(duration + delay);
+        this.cycle(startDelay + duration + delay);
     }
 
     componentWillUnmount() {
@@ -117,7 +117,8 @@ class Cycler extends React.Component {
                 wrap={ this.props.wrap }
                 changeFrom={ this.state.previousText }
                 humanLike={ this.props.humanLike }
-                renderIn={ this.props.duration }
+                duration={ this.props.duration }
+                startDelay={ this.props.startDelay }
                 text={ this.state.renderText } />
         );
     }

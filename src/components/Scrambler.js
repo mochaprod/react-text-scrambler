@@ -5,6 +5,7 @@ class Scrambler extends React.Component {
     static propTypes = {
         text: PropTypes.string,
         wrap: PropTypes.func,
+        duration: PropTypes.number,
         renderIn: PropTypes.number,
         humanLike: PropTypes.bool,
         typewriter: PropTypes.bool,
@@ -17,6 +18,7 @@ class Scrambler extends React.Component {
     };
 
     static defaultProps = {
+        duration: 3000,
         renderIn: 3000,
         humanLike: false,
         typewriter: false,
@@ -209,14 +211,14 @@ class Scrambler extends React.Component {
             return;
         }
 
-        const { renderIn, characters } = this.props;
+        const { duration, renderIn, characters } = this.props;
         const scramble = this.getScrambleText(this.props);
 
         this.characters = characters;
         this.scrambling = true;
 
         this.frame = 0;
-        this.startScrambling(scramble, "", renderIn);
+        this.startScrambling(scramble, "", duration || renderIn);
     }
 
     componentWillUnmount() {
