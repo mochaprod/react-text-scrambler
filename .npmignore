@@ -1,8 +1,11 @@
 src/
 tests/
 node_modules/
+examples/
+.vscode/
 
 .babelrc
 .eslintrc.js
 README.md
 webpack.config.js
+webpack.config.demo.js
