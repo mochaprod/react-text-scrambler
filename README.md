@@ -1,9 +1,23 @@
-# react-text-scrambler (v1.1.2)
+# react-text-scrambler
 
 ![Version](https://img.shields.io/github/package-json/v/benjhu/react-text-scrambler.svg)
 ![License](https://img.shields.io/github/license/benjhu/react-text-scrambler.svg)
 
 **React** components for text animation.
+
+## Installation
+
+Install from `npm`:
+
+```bash
+npm install react-text-scrambler
+```
+
+The UMD build is available on **unpkg**.
+
+```bash
+http://unpkg.com/react-text-scrambler@latest/dist/latest.js
+```
 
 ## Usage
 
@@ -22,24 +36,24 @@ The `Scrambler` receives the text to be scrambled as a prop. It scrambles text o
 ```
 
 | Prop | Default Value | |
-|------------|---------------|-------------------------------------------------------------------------------------------|
+| --- | --- | --- |
 | `children` | `""` | (**Deprecated: removal in 2.0.0**) A string of text to scramble. |
 | `text` | `""` | Specify text to scramble. If no text is provided in this prop, any string in the `children` prop is used as the fallback text. |
-| `characters` | `"+/\\_-"` | Characters to be randomly included in each scramble (only if `humanLike` is `false`). |
-| `humanLike` | `false` | If `true`, instead of scrambling characters, text appears like typing. |
+| `characters` | `"+/\\_-"` | Characters to be randomly included in each scramble (only if `typewriter` is `false`). |
+| `typewriter` | `false` | If `true`, instead of scrambling characters, text appears like typing. |
 | `renderIn` | `3000` | The `Scrambler` will complete scrambling in the provided time in milliseconds. |
 | `changeFrom` | `""` | The Scrambler will scramble text provided in this prop to the string provided in `text`. |
 | `wrap` | `undefined` | Scrambled characters are wrapped in a provided `Wrap` component. Style scrambled characters as you see fit! |
 
-### Cycler
+### `Cycler`
 
 The `Cycler` renders `Scrambler`s in a specified interval. It automatically passes the `changeFrom` prop to the `Scrambler` for the next string in queue to create seamless transitions between scrambles.
 
-If `humanLike` is `true`, empty strings, `""` are inserted in between each string in `strings` to simulate backspacing and typing.
+If `typewriter` is `true`, empty strings, `""` are inserted in between each string in `strings` to simulate backspacing and typing.
 
 | Prop | Default Value | |
-|-----------|---------------|--------------------------------------------|
-| `humanLike` | `false` | Passed to `Scrambler`s `humanLike` prop. |
+| --- | --- | --- |
+| `typewriter` | `false` | Passed to `Scrambler`s `typewriter` prop. |
 | `duration` | `3000` | The duration of each `Scrambler`. |
 | `strings` | `[]` | An array of strings to scramble. |
 | `characters` | `undefined` | A string of characters to scramble with. If `undefined`, `Scrambler` will use its default `characters` value. |
@@ -48,14 +62,14 @@ If `humanLike` is `true`, empty strings, `""` are inserted in between each strin
 
 ### Typing animation
 
-Just set the `humanLike` prop to `true`.
+Just set the `typewriter` prop to `true`.
 
 ```javascript
 const MyComponent = props => {
     ...
 
     return (
-        <Scrambler text="This text will be typed out!" humanLike />
+        <Scrambler text="This text will be typed out!" typewriter />
     );
 };
 ```
@@ -94,6 +108,24 @@ const MyComponent = props => {
             strings={ strings } />
     );
 };
+```
+
+### Wrap Scrambled Characters
+
+For more customization, scrambled characters can be wrapped in a React component passed through the `wrap` prop.
+
+```javascript
+const GrayText = props => (
+    <span style="color: #cccccc;">{ props.children }</span>
+);
+
+...
+
+const MyScrambledText = () => (
+    <Scrambler
+        text="Some more text. This is a lot of text!!"
+        wrap={ GrayText } />
+);
 ```
 
 ## TODOs
