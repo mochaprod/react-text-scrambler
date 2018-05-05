@@ -31,6 +31,23 @@ class TextRenderer extends React.Component {
 
     defaultPreprocessor = () => {};
 
+    defaultCharacterTransitionerThing = (frames, parameters) => {
+        const {
+            transitionStart,
+            transitionEnd,
+            prevChar,
+            nextChar,
+            transitionChar } = parameters;
+
+        if (this._frames < transitionStart) {
+            return prevChar;
+        } else if (this._frames >= transitionStart && this._frames <= transitionEnd) {
+            return transitionChar;
+        } else {
+            return nextChar;
+        }
+    };
+
     _bootstrap = callback => {
         // callback: fn(nextChar, prevChar, nextFrame, prevFrame, index)
         const { text, initText } = this.props;
@@ -139,23 +156,16 @@ class TextRenderer extends React.Component {
 
         this._renderQueue.forEach((iteration, index) => {
             const { transitionStart, transitionEnd } = iteration;
+            let call;
 
-            if (typeof onCharacterTransition === "function") {
-                // The transition information is passed to the function that should
-                // return the next character.
-                nextCharacter = onCharacterTransition(iteration);
-            } else {
-                const { prevChar, nextChar, transitionChar } = iteration;
+            call = typeof onCharacterTransition === "function" ?
+                onCharacterTransition :
+                this.defaultCharacterTransitionerThing;
 
-                if (this._frames < transitionStart) {
-                    nextCharacter = prevChar;
-                } else if (this._frames >= transitionStart && this._frames <= transitionEnd) {
-                    nextCharacter = transitionChar;
-                } else {
-                    // Character completed transition
-                    nextCharacter = nextChar;
-                    totalProcessed++;
-                }
+            nextCharacter = call(this._frames, iteration);
+
+            if (this._frames > transitionStart && this._frames > transitionEnd) {
+                totalProcessed++;
             }
 
             // Determine if stringGroup should be appended
