@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { request } from "https";
 
 class TextRenderer extends React.Component {
     static propTypes = {
@@ -38,10 +37,14 @@ class TextRenderer extends React.Component {
         const maxLength = Math.max(text.length, initText.length);
 
         let framesUsed = 0;
+
+        // The parameters for the previous iteration/character is passed into the current
+        // iteration so that frames and other parameters can be determined relatively.
         let prevData = null;
 
         this._renderQueue = [];
         this._frames = 0;
+        this._active = true;
 
         if (typeof text === "string") {
             for (let i = 0; i < maxLength; i++) {
@@ -66,6 +69,8 @@ class TextRenderer extends React.Component {
                 // All the work will be done via the preprocessor.
                 this._renderQueue.push(prevData);
             }
+
+            this._updateFrame()();
         }
     };
 
@@ -82,17 +87,21 @@ class TextRenderer extends React.Component {
     _updateTextChunk = (
         currentTransitionState,
         previousTransitionState,
-        stringGroup,
+        stringGroup = "",
         renderComponents,
         nextChar,
         index,
-        force = 0
+        force = false
     ) => {
         if (index <= 0) {
             return nextChar;
         }
 
-        if (currentTransitionState !== previousTransitionState || force === 1) {
+        if (currentTransitionState !== previousTransitionState || force === true) {
+            if (force === true) {
+                stringGroup += nextChar;
+            }
+
             if (stringGroup.length > 0) {
                 renderComponents.push(stringGroup);
             }
@@ -112,6 +121,8 @@ class TextRenderer extends React.Component {
             if (this._animationID) {
                 cancelAnimationFrame(this._animationID);
             }
+
+            this._active = false;
 
             return;
         }
@@ -157,19 +168,26 @@ class TextRenderer extends React.Component {
                 renderComponents,
                 nextCharacter,
                 index,
-                index === queueLength - 1 ? 1 : 0
+                index === queueLength - 1
             );
 
             transitionState = nextTransitionState;
         });
 
-        this.setState({ components: renderComponents });
-        this._frames++;
-        this._animationID = requestAnimationFrame(this._updateFrame(totalProcessed));
+        // If component was unmounted the state will not be updated.
+        if (this._active === true) {
+            this.setState({ components: renderComponents });
+            this._frames++;
+            this._animationID = requestAnimationFrame(this._updateFrame(totalProcessed));
+        }
     };
 
     componentDidMount() {
-        const { preprocessor } = this.props;
+        this._bootstrap(this.props.preprocessor);
+    }
+
+    componentWillUnmount() {
+        this._active = false;
     }
 
     render() {
