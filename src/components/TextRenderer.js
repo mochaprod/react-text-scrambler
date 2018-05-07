@@ -53,8 +53,6 @@ class TextRenderer extends React.Component {
         const { text, initText } = this.props;
         const maxLength = Math.max(text.length, initText.length);
 
-        let framesUsed = 0;
-
         // The parameters for the previous iteration/character is passed into the current
         // iteration so that frames and other parameters can be determined relatively.
         let prevData = null;
@@ -101,6 +99,19 @@ class TextRenderer extends React.Component {
         }
     };
 
+    _getWrappingComponent = transitionState => {
+        switch (transitionState) {
+            case 0:
+                return this.props.wrapBefore;
+            case 1:
+                return this.props.wrapWhile;
+            case 2:
+                return this.props.wrapAfter;
+            default:
+                return null;
+        }
+    };
+
     _updateTextChunk = (
         currentTransitionState,
         previousTransitionState,
@@ -120,7 +131,15 @@ class TextRenderer extends React.Component {
             }
 
             if (stringGroup.length > 0) {
-                renderComponents.push(stringGroup);
+                let External = this._getWrappingComponent(currentTransitionState);
+
+                if (External !== null) {
+                    renderComponents.push(
+                        <External key={ index }>{ stringGroup }</External>
+                    );
+                } else {
+                    renderComponents.push(stringGroup);
+                }
             }
 
             return nextChar;
