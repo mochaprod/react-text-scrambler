@@ -39,9 +39,9 @@ class TextRenderer extends React.Component {
             nextChar,
             transitionChar } = parameters;
 
-        if (this._frames < transitionStart) {
+        if (frames < transitionStart) {
             return prevChar;
-        } else if (this._frames >= transitionStart && this._frames <= transitionEnd) {
+        } else if (frames >= transitionStart && frames <= transitionEnd) {
             return transitionChar;
         } else {
             return nextChar;
@@ -181,7 +181,7 @@ class TextRenderer extends React.Component {
                 onCharacterTransition :
                 this.defaultCharacterTransitionerThing;
 
-            nextCharacter = call(this._frames, iteration);
+            nextCharacter = call(this._frames, iteration, index);
 
             if (this._frames > transitionStart && this._frames > transitionEnd) {
                 totalProcessed++;
