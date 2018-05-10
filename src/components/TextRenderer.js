@@ -212,7 +212,9 @@ class TextRenderer extends React.Component {
     };
 
     componentDidMount() {
-        this._bootstrap(this.props.preprocessor);
+        if (!this.props.static) {
+            this._bootstrap(this.props.preprocessor);
+        }
     }
 
     componentWillUnmount() {
@@ -220,7 +222,9 @@ class TextRenderer extends React.Component {
     }
 
     render() {
-        return this.state.components;
+        return this.props.static ?
+            this.props.text :
+            this.state.components;
     }
 }
 
