@@ -6,7 +6,7 @@ import TextRenderer from "./TextRenderer";
 /**
  * A scrambler that changes transition characters every 10 (or props) frames.
  */
-class WeirdScrambler extends React.Component {
+class TransitionScrambler extends React.Component {
     static propTypes = {
         text: PropTypes.string.isRequired,
         prevText: PropTypes.string,
@@ -110,4 +110,4 @@ class WeirdScrambler extends React.Component {
     }
 }
 
-export default WeirdScrambler;
+export default TransitionScrambler;
