@@ -8,11 +8,11 @@ module.exports = {
         "react-text-scrambler": "ReactTextScrambler"
     },
     entry: {
-        "./examples/static/dist": "./examples/demo.js"
+        "./docs/static/dist": "./docs/docs.js"
     },
     output: {
         path: path.resolve(__dirname),
-        filename: "[name]/examples.js"
+        filename: "[name]/docs.js"
     },
     module: {
         rules: [

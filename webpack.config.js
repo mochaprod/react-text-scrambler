@@ -9,7 +9,7 @@ module.exports = {
     },
     entry: {
         "./dist": "./src/index.js",
-        "./examples/static/dist": "./src/index.js"
+        "./docs/static/dist": "./src/index.js"
     },
     output: {
         library: "ReactTextScrambler",
