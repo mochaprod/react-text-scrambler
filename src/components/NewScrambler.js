@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import TextRenderer from "./TextRenderer";
+
+import TextRenderer from "./internals/TextRenderer";
 
 /**
  * The 'NewScrambler' will replace the current 'Scrambler' component.
@@ -13,12 +14,11 @@ import TextRenderer from "./TextRenderer";
  */
 class NewScrambler extends React.PureComponent {
     static propTypes = {
-        text: PropTypes.string,
+        text: PropTypes.string.isRequired,
         prevText: PropTypes.string
     };
 
     static defaultProps = {
-        text: "",
         prevText: ""
     };
 

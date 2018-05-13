@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import TextRenderer from "./TextRenderer";
+import TextRenderer from "./internals/TextRenderer";
 
 /**
  * A scrambler that changes transition characters every 10 (or props) frames.
