@@ -6,22 +6,22 @@ import TextRenderer from "./TextRenderer";
 /**
  * A scrambler that changes transition characters every 10 (or props) frames.
  */
-class TransitionScrambler extends React.Component {
+class TransitionScrambler extends React.PureComponent {
     static propTypes = {
         text: PropTypes.string.isRequired,
         prevText: PropTypes.string,
-        characters: PropTypes.oneOf(
+        characters: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string),
             PropTypes.string
-        ),
-        transitionStart: PropTypes.oneOf(
+        ]),
+        transitionStart: PropTypes.oneOfType([
             PropTypes.number,
             PropTypes.func
-        ),
-        transitionDuration: PropTypes.oneOf(
+        ]),
+        transitionDuration: PropTypes.oneOfType([
             PropTypes.number,
             PropTypes.func
-        ),
+        ]),
         characterLifetime: PropTypes.number,
         onCharacterLifetimeEnd: PropTypes.func
     };
