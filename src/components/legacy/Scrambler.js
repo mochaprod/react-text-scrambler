@@ -5,6 +5,7 @@ class Scrambler extends React.Component {
     static propTypes = {
         text: PropTypes.string,
         wrap: PropTypes.func,
+        wrapUnscrambled: PropTypes.func,
         duration: PropTypes.number,
         renderIn: PropTypes.number,
         humanLike: PropTypes.bool,
@@ -12,7 +13,11 @@ class Scrambler extends React.Component {
         changeFrom: PropTypes.string,
         startDelay: PropTypes.number,
         static: PropTypes.bool,
-        characters: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+        preserveSpaces: PropTypes.bool,
+        characters: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.arrayOf(PropTypes.string)
+        ]),
         deprecatedFeatures: PropTypes.bool,
         onScrambleDone: PropTypes.func
     };
@@ -22,6 +27,7 @@ class Scrambler extends React.Component {
         renderIn: 3000,
         humanLike: false,
         typewriter: false,
+        preserveSpaces: true,
         startDelay: 0,
         characters: "+/\\_-"
     };
@@ -40,16 +46,19 @@ class Scrambler extends React.Component {
     }
 
     getNextComponent(mode, str, key) {
-        const Wrap = this.props.wrap && mode ?
-            this.props.wrap :
-            React.Fragment;
+        if (this.props.wrap && mode) {
+            const Wrap = this.props.wrap;
 
-        return (
-            <Wrap key={ key }>{ str }</Wrap>
-        );
+            return (
+                <Wrap key={ key }>{ str }</Wrap>
+            );
+        } else {
+            return str;
+        }
     }
 
     startScrambling(end, start, renderIn = 3000) {
+        // The scramble queue
         this.queue = [];
         end = end || "";
 
@@ -78,6 +87,7 @@ class Scrambler extends React.Component {
 
             dec = startTransformation;
             lastStartFrame = startTransformation;
+
             this.queue.push({
                 oldCharacter,
                 newCharacter,
@@ -92,11 +102,15 @@ class Scrambler extends React.Component {
     updateFrame() {
         let charactersProcessed = 0;
         let nextDisplay = "";
+        let stringBuilder = "";
         let character;
 
-        const renderComponents = [];
-        let stringBuilder = "";
+        // We're using a "mode" to decide if a group of characters
+        // should be wrapped in a component or not.
         let mode = false;
+
+        // The next state of the scramble
+        const renderComponents = [];
 
         this.queue = this.queue.map((process, i) => {
             // Removal of humanLike in v2.0.0
@@ -106,7 +120,10 @@ class Scrambler extends React.Component {
                 startTransformation,
                 endTransformation,
                 scrambleChar } = process;
-            const { humanLike, typewriter } = this.props;
+            const {
+                humanLike,
+                typewriter,
+                preserveSpaces } = this.props;
 
             let append = oldCharacter;
             let returnThis = process;
@@ -123,11 +140,12 @@ class Scrambler extends React.Component {
                 append = scrambleChar;
                 modifyMode = true;
             } else if (!humanLike && Math.random() < 0.05) {
-                character = this.randomCharacter();
+                character = preserveSpaces && (oldCharacter === " " || newCharacter === " ") ?
+                    " " : this.randomCharacter();
                 append = character;
                 modifyMode = true;
 
-                returnThis = Object.assign({}, process, { scrambleChar: character });
+                returnThis = { ...process, scrambleChar: character };
             } else {
                 append = oldCharacter;
             }
@@ -138,7 +156,7 @@ class Scrambler extends React.Component {
                 renderComponents.push(this.getNextComponent(mode,
                     stringBuilder, renderComponents.length));
 
-                stringBuilder = "" + append;
+                stringBuilder = append;
                 mode = !mode;
             } else {
                 stringBuilder += append;
