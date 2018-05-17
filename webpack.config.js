@@ -2,7 +2,8 @@ const webpack = require("webpack");
 const path = require("path");
 
 module.exports = {
-    mode: "development",
+    mode: "production",
+    devtool: "inline-source-map",
     externals: {
         "react": "React",
         "react-dom": "ReactDOM"

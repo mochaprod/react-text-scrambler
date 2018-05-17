@@ -41,6 +41,7 @@ module.exports = {
         ],
         "no-unused-vars": "warn",
         "space-before-function-paren": "off",
-        "operator-linebreak": "off"
+        "operator-linebreak": "off",
+        "react/display-name": "off"
     }
 };

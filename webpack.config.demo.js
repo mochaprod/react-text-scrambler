@@ -2,13 +2,14 @@ const path = require("path");
 
 module.exports = {
     mode: "development",
+    devtool: "inline-source-map",
     externals: {
         "react": "React",
         "react-dom": "ReactDOM",
         "react-text-scrambler": "ReactTextScrambler"
     },
     entry: {
-        "./docs/static/dist": "./docs/docs.js"
+        "./docs/static/dist": "./docs/index.js"
     },
     output: {
         path: path.resolve(__dirname),
