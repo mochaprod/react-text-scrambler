@@ -7,12 +7,14 @@ class SimpleScrambler extends React.Component {
     static propTypes = {
         text: PropTypes.string.isRequired,
         initialCharacter: PropTypes.string,
-        durationRange: PropTypes.number
+        durationRange: PropTypes.number,
+        preserveSpaces: PropTypes.bool
     };
 
     static defaultProps = {
         initialCharacter: "-",
-        durationRange: 60
+        durationRange: 60,
+        preserveSpaces: true
     };
 
     _computePrevText = text => {
@@ -31,13 +33,17 @@ class SimpleScrambler extends React.Component {
         Math.floor(Math.random() * limit);
 
     _animator = (nextChar, prevChar, prevData, index) => {
-        const duration = this._range(this.props.durationRange);
+        const { preserveSpaces: spaces, durationRange } = this.props;
+
+        const duration = this._range(durationRange);
+        const theRealPrevChar = prevChar === " " || nextChar === " " ?
+            " " : prevChar;
 
         return {
             transitionStart: 60 + duration,
             transitionEnd: 60 + duration,
-            transitionChar: prevChar,
-            prevChar,
+            transitionChar: spaces ? theRealPrevChar : prevChar,
+            prevChar: spaces ? theRealPrevChar : prevChar,
             nextChar
         };
     };
