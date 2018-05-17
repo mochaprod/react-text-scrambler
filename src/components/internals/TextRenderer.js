@@ -29,16 +29,16 @@ class TextRenderer extends React.Component {
         components: null
     };
 
-    defaultPreprocessor = () => {};
-
-    defaultCharacterTransitionerThing = (frames, parameters) => {
-        const {
+    defaultCharacterTransitionerThing = (
+        frames,
+        {
             transitionStart,
             transitionEnd,
             prevChar,
             nextChar,
-            transitionChar } = parameters;
-
+            transitionChar
+        }
+    ) => {
         if (frames < transitionStart) {
             return prevChar;
         } else if (frames >= transitionStart && frames <= transitionEnd) {
