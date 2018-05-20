@@ -25,7 +25,13 @@ module.exports = {
                 test: /\.js$/,
                 loader: "babel-loader",
                 options: {
-                    presets: ["env", "react", "stage-2"]
+                    presets: [
+                        "@babel/preset-env",
+                        "@babel/preset-react",
+                        ["@babel/preset-stage-2", {
+                            "decoratorsLegacy": true
+                        }]
+                    ]
                 }
             }
         ]
