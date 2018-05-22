@@ -9,14 +9,20 @@ class SimpleScrambler extends React.Component {
         initialCharacter: PropTypes.string,
         durationRange: PropTypes.number,
         startDelay: PropTypes.number,
-        preserveSpaces: PropTypes.bool
+        preserveSpaces: PropTypes.bool,
+        wrapBefore: PropTypes.func,
+        wrapWhile: PropTypes.func,
+        wrapAfter: PropTypes.func
     };
 
     static defaultProps = {
         initialCharacter: "-",
         durationRange: 60,
         startDelay: 60,
-        preserveSpaces: true
+        preserveSpaces: true,
+        wrapBefore: null,
+        wrapWhile: null,
+        wrapAfter: null
     };
 
     _computePrevText = text => {
@@ -56,7 +62,10 @@ class SimpleScrambler extends React.Component {
 
     render() {
         const {
-            text
+            text,
+            wrapBefore,
+            wrapWhile,
+            wrapAfter
         } = this.props;
         const prevText = this._computePrevText(text);
 
@@ -64,7 +73,10 @@ class SimpleScrambler extends React.Component {
             <TextRenderer
                 text={ text }
                 initText={ prevText }
-                preprocessor={ this._animator } />
+                preprocessor={ this._animator }
+                wrapBefore={ wrapBefore }
+                wrapWhile={ wrapWhile }
+                wrapAfter={ wrapAfter } />
         );
     }
 }
