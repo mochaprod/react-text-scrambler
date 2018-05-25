@@ -1,13 +1,22 @@
 import React from "react";
 
 /**
- * The context that is consumed by the `TextRenderer`.
+ * The context that is consumed by the `TextRenderer`. Empty callbacks
+ * are passed down so that all `TextRenderer`s would have something to
+ * call during their life-cycles.
  */
 const contextShape = {
-    onTextRendererMount: () => {},
-    onAnimationEnd: () => {}
+    // Gets called when the `TextRenderer` is mounted. This can also be
+    // used to check for the existence of a `TextRenderer` down the
+    // component tree.
+    rendererDidMount: () => null,
+
+    // Gets called when animation is complete.
+    animationDidEnd: () => null
 };
 
+// The Provider is a main export so that the `TextRenderer` context API
+// can be used.
 const { Provider, Consumer } = React.createContext(contextShape);
 
 /**
