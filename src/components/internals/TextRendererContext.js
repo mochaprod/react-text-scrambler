@@ -40,5 +40,6 @@ const withTextRendererContext = Component => props => (
 export {
     Provider,
     Consumer,
-    withTextRendererContext
+    withTextRendererContext,
+    contextShape
 };

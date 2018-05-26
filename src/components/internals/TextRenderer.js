@@ -1,17 +1,52 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import {
+    withTextRendererContext,
+    contextShape
+} from "./TextRendererContext";
+
+/**
+ * The component that interfaces animation definitions and rendering.
+ *
+ * Animation frames are defined by a callback passed through the `preprocessor`
+ * prop.
+ *
+ * The `TextRenderer` is exported using the `withTextRendererContext` higher-order
+ * component to gain access to the secret context that allows components like the
+ * `Cycler` up the component tree to manipulate the `TextRenderer` API.
+ */
 class TextRenderer extends React.Component {
     static propTypes = {
+        // Resulting text of the animation.
         text: PropTypes.string,
+
+        // Initial text of the animation; this text "becomes" the new text.
         initText: PropTypes.string,
+
+        // The order in which characters are processed during the preprocessing step.
         order: PropTypes.string,
+
+        // A callback that returns an object containing the parameters of each
+        // character's animation.
         preprocessor: PropTypes.func.isRequired,
+
+        // A callback function that is called on each frame update to determine
+        // what character should be rendered.
         onCharacterTransition: PropTypes.func,
+
+        // Just render the new text.
         static: PropTypes.bool,
+
         wrapBefore: PropTypes.func,
         wrapWhile: PropTypes.func,
-        wrapAfter: PropTypes.func
+        wrapAfter: PropTypes.func,
+
+        // A function that is called when animation is complete.
+        animationDidEnd: PropTypes.func,
+
+        // Used internally. Don't mess with this!
+        _SECRET_textRendererContext: PropTypes.object
     };
 
     static defaultProps = {
@@ -22,7 +57,11 @@ class TextRenderer extends React.Component {
         static: false,
         wrapBefore: null,
         wrapWhile: null,
-        wrapAfter: null
+        wrapAfter: null,
+
+        animationDidEnd: () => null,
+
+        _SECRET_textRendererContext: contextShape
     };
 
     state = {
@@ -47,6 +86,9 @@ class TextRenderer extends React.Component {
             return nextChar;
         }
     };
+
+    __getInternalContext = () =>
+        this.props._SECRET_textRendererContext;
 
     _bootstrap = callback => {
         // callback: fn(nextChar, prevChar, nextFrame, prevFrame, index)
@@ -86,6 +128,8 @@ class TextRenderer extends React.Component {
             }
 
             this._updateFrame()();
+        } else {
+            // We abort animation; just switch to `static` mode
         }
     };
 
@@ -158,6 +202,10 @@ class TextRenderer extends React.Component {
                 cancelAnimationFrame(this._animationID);
             }
 
+            // Animation complete; call subscription.
+            this.props.animationDidEnd();
+            this.__getInternalContext().animationDidEnd(this.props);
+
             this._active = false;
 
             return;
@@ -228,4 +276,4 @@ class TextRenderer extends React.Component {
     }
 }
 
-export default TextRenderer;
+export default withTextRendererContext(TextRenderer);
