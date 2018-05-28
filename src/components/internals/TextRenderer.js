@@ -127,6 +127,9 @@ class TextRenderer extends React.Component {
                 this._renderQueue.push(prevData);
             }
 
+            // Consider it mounted when the render queue is finished
+            // being prepared.
+            this.__getInternalContext().rendererDidMount(this.props);
             this._updateFrame()();
         } else {
             // We abort animation; just switch to `static` mode
