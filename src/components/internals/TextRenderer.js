@@ -92,8 +92,9 @@ class TextRenderer extends React.Component {
 
     _bootstrap = callback => {
         // callback: fn(nextChar, prevChar, nextFrame, prevFrame, index)
-        const { text, initText } = this.props;
+        const { text, initText, order } = this.props;
         const maxLength = Math.max(text.length, initText.length);
+        const op = order === "normal" ? "push" : "unshift";
 
         // The parameters for the previous iteration/character is passed into the current
         // iteration so that frames and other parameters can be determined relatively.
@@ -105,7 +106,7 @@ class TextRenderer extends React.Component {
 
         if (typeof text === "string") {
             for (let i = 0; i < maxLength; i++) {
-                let j = i;
+                let j = order === "normal" ? i : maxLength - i - 1;
                 let init = initText[j] || "";
                 let after = text[j] || "";
 
@@ -124,7 +125,8 @@ class TextRenderer extends React.Component {
                 };
 
                 // All the work will be done via the preprocessor.
-                this._renderQueue.push(prevData);
+                // Pushes when in normal order and unshifts otherwise.
+                this._renderQueue[op](prevData);
             }
 
             // Consider it mounted when the render queue is finished
